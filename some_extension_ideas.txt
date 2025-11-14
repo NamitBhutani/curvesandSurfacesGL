@@ -1,5 +1,6 @@
 we can try to add these (prolly easier ones) after the core impl is done -
 1. animating the casteljau algo, showing intermediate lerps
 2. implement basic blinn-phong shading and simple lighting? will need to store surface normals as well for this
+    (or ditch this and try doing a low poly art style)
 3. maybe revolve the curve another curve aswell other than just x/y/z axis
 4. basic rotation, sin animation in play park scene
