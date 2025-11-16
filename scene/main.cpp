@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <camera.h>
+#include <model.h>
 #include <shader.h>
 
 #include <filesystem>
@@ -67,56 +68,11 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // draw in wireframe
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     Shader shader("cube.vert", "cube.frag");
 
-    // cube vertices (position + color)
-    float vertices[] = {
-        // positions         // colors
-        -0.5f, -0.5f, -0.5f, 0.8f, 0.1f, 0.1f,
-        0.5f, -0.5f, -0.5f, 0.8f, 0.6f, 0.1f,
-        0.5f, 0.5f, -0.5f, 0.1f, 0.8f, 0.1f,
-        -0.5f, 0.5f, -0.5f, 0.1f, 0.6f, 0.8f,
-
-        -0.5f, -0.5f, 0.5f, 0.9f, 0.3f, 0.7f,
-        0.5f, -0.5f, 0.5f, 0.2f, 0.7f, 0.9f,
-        0.5f, 0.5f, 0.5f, 0.7f, 0.7f, 0.2f,
-        -0.5f, 0.5f, 0.5f, 0.9f, 0.9f, 0.4f};
-
-    unsigned int indices[] = {
-        // back face
-        0, 1, 2, 2, 3, 0,
-        // front face
-        4, 5, 6, 6, 7, 4,
-        // left
-        4, 0, 3, 3, 7, 4,
-        // right
-        1, 5, 6, 6, 2, 1,
-        // bottom
-        4, 5, 1, 1, 0, 4,
-        // top
-        3, 2, 6, 6, 7, 3};
-
-    GLuint VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    // color
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
+    Model model("cube.off");
 
     while (!glfwWindowShouldClose(window))
     {
@@ -136,14 +92,9 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("projection", projection);
         shader.setMat4("view", view);
+        shader.setMat4("model", glm::mat4(1.0f));
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        shader.setMat4("model", model);
-
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        model.draw(shader);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

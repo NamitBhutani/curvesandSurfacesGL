@@ -20,6 +20,8 @@ add_executable(${PROJECT_NAME}
     main.cpp
     camera.h
     shader.h
+    mesh.h
+    model.h
 )
 
 # Include directories
@@ -37,7 +39,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenGL::GL
     ${CMAKE_DL_LIBS})
 
-# Copy shader files to build directory
+# Copy model & shader files to build directory
+file(GLOB MODEL_FILES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/models/*.off"
+)
 file(GLOB SHADER_FILES 
     "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.vert"
     "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.frag"
@@ -45,6 +50,7 @@ file(GLOB SHADER_FILES
 file(
     GLOB OBJECT_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/build/*"
 )
+file(COPY ${MODEL_FILES} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${SHADER_FILES} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${OBJECT_FOLDER} DESTINATION ${CMAKE_BINARY_DIR})
 
