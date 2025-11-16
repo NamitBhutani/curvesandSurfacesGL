@@ -11,6 +11,8 @@ enum KeyInput
     BACKWARD,
     LEFT,
     RIGHT,
+    UP,
+    DOWN,
 };
 
 const float YAW = -90.0f;
@@ -57,6 +59,10 @@ public:
             position -= right * velocity;
         if (direction == RIGHT)
             position += right * velocity;
+        if (direction == UP)
+            position += up * velocity;
+        if (direction == DOWN)
+            position -= up * velocity;
     }
 
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
