@@ -43,12 +43,12 @@ public:
         updateCameraVectors();
     }
 
-    glm::mat4 GetViewMatrix()
+    glm::mat4 getViewMatrix()
     {
         return glm::lookAt(position, position + front, up);
     }
 
-    void ProcessKeyboard(KeyInput direction, float deltaTime)
+    void processKeyboard(KeyInput direction, float deltaTime)
     {
         float velocity = speed * deltaTime;
         if (direction == FORWARD)
@@ -65,7 +65,7 @@ public:
             position -= up * velocity;
     }
 
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
+    void processMouse(float xoffset, float yoffset, GLboolean constrainPitch = true)
     {
         yaw += xoffset * sensitivity;
         pitch += yoffset * sensitivity;
@@ -81,7 +81,7 @@ public:
         updateCameraVectors();
     }
 
-    void ProcessMouseScroll(float yoffset)
+    void processScroll(float yoffset)
     {
         zoom -= yoffset;
         if (zoom < 1.0f)
@@ -90,7 +90,7 @@ public:
             zoom = 45.0f;
     }
 
-    void ProcessRoll(float offset)
+    void processRoll(float offset)
     {
         roll += offset * rollSpeed;
         if (roll > 180.0f)
