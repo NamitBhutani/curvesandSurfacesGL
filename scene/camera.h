@@ -16,7 +16,8 @@ enum KeyInput
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
-const float SENSITIVITY = 0.1f;
+const float ROLL_SPEED = 50.0f;
+const float SENSITIVITY = 0.05f;
 const float ZOOM = 45.0f;
 
 class Camera
@@ -29,11 +30,13 @@ public:
     glm::vec3 worldUp;
     float yaw;
     float pitch;
+    float roll;
     float speed;
+    float rollSpeed;
     float sensitivity;
     float zoom;
 
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : position(position), worldUp(up), yaw(yaw), pitch(pitch), front(glm::vec3(0.0f, 0.0f, -1.0f)), speed(SPEED), sensitivity(SENSITIVITY), zoom(ZOOM)
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : position(position), worldUp(up), yaw(yaw), pitch(pitch), roll(0.0f), front(glm::vec3(0.0f, 0.0f, -1.0f)), speed(SPEED), rollSpeed(ROLL_SPEED), sensitivity(SENSITIVITY), zoom(ZOOM)
     {
         updateCameraVectors();
     }
@@ -58,11 +61,8 @@ public:
 
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
     {
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        yaw += xoffset;
-        pitch += yoffset;
+        yaw += xoffset * sensitivity;
+        pitch += yoffset * sensitivity;
 
         if (constrainPitch)
         {
@@ -84,6 +84,16 @@ public:
             zoom = 45.0f;
     }
 
+    void ProcessRoll(float offset)
+    {
+        roll += offset * rollSpeed;
+        if (roll > 180.0f)
+            roll -= 360.0f;
+        if (roll < -180.0f)
+            roll += 360.0f;
+        updateCameraVectors();
+    }
+
 private:
     void updateCameraVectors()
     {
@@ -93,6 +103,14 @@ private:
         front = glm::normalize(front);
         right = glm::normalize(glm::cross(front, worldUp));
         up = glm::normalize(glm::cross(right, front));
+
+        if (roll != 0.0f)
+        {
+            glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(roll), front);
+            glm::vec3 upRot = glm::normalize(glm::vec3(rot * glm::vec4(up, 0.0f)));
+            right = glm::normalize(glm::cross(front, upRot));
+            up = glm::normalize(glm::cross(right, front));
+        }
     }
 };
 #endif
