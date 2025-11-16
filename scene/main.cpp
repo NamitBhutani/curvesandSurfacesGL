@@ -24,6 +24,7 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+bool drawEdges = false;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
@@ -94,7 +95,7 @@ int main()
         shader.setMat4("view", view);
         shader.setMat4("model", glm::mat4(1.0f));
 
-        model.draw(shader);
+        model.draw(shader, drawEdges);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -127,6 +128,9 @@ void processInput(GLFWwindow *window)
         camera.processRoll(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         camera.processRoll(-deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+        drawEdges = !drawEdges;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)

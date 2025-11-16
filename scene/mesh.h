@@ -22,6 +22,8 @@ class Mesh
 public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    unsigned int edgeEBO;
+    unsigned int edgeCount;
     unsigned int VAO;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
@@ -39,6 +41,26 @@ public:
         glBindVertexArray(0);
     }
 
+    void drawEdges(Shader &shader)
+    {
+        glBindVertexArray(VAO);
+
+        // temporarily disable the vertex color attribute and set a constant color
+        glDisableVertexAttribArray(1);
+        glVertexAttrib3f(1, 1.0f, 0.0f, 1.0f);
+
+        // bind edge EBO and draw
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgeEBO);
+        glLineWidth(2.0f);
+        glDrawElements(GL_LINES, edgeCount, GL_UNSIGNED_INT, 0);
+
+        // restore triangle EBO
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glEnableVertexAttribArray(1);
+
+        glBindVertexArray(0);
+    }
+
 private:
     unsigned int VBO, EBO;
 
@@ -53,6 +75,27 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
+        // build edge index list (each triangle gives three edges)
+        std::vector<unsigned int> edges;
+        for (int i = 0; i < indices.size() - 2; i += 3)
+        {
+            unsigned int a = indices[i];
+            unsigned int b = indices[i + 1];
+            unsigned int c = indices[i + 2];
+            edges.push_back(a);
+            edges.push_back(b);
+            edges.push_back(b);
+            edges.push_back(c);
+            edges.push_back(c);
+            edges.push_back(a);
+        }
+        edgeCount = static_cast<unsigned int>(edges.size());
+
+        glGenBuffers(1, &edgeEBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgeEBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, edges.size() * sizeof(unsigned int), &edges[0], GL_STATIC_DRAW);
+
+        // triangle EBO needs to be bound last since only one EBO can be bound to a VAO at any given draw call
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 

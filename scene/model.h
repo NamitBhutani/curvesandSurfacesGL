@@ -202,10 +202,14 @@ public:
         return true;
     }
 
-    void draw(Shader &shader)
+    void draw(Shader &shader, bool drawEdges = false)
     {
         for (Mesh &m : meshes)
+        {
             m.draw(shader);
+            if (drawEdges)
+                m.drawEdges(shader);
+        }
     }
 };
 
