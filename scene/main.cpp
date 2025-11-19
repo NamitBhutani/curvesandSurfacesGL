@@ -76,6 +76,18 @@ int main()
 
     Model model("scene.off");
 
+    std::cout << "================================" << std::endl;
+    std::cout << "CONTROLS:" << std::endl;
+    std::cout << "    W/S/A/D: Move forward/backward/left/right" << std::endl;
+    std::cout << "    SPACE/LEFT CTRL: Move up/down" << std::endl;
+    std::cout << "    SCROLL: Zoom in/out" << std::endl;
+    std::cout << "    Q/E: Roll left/right" << std::endl;
+    std::cout << "    R: Reset roll" << std::endl;
+    std::cout << "    B: Toggle edge drawing" << std::endl;
+    std::cout << "    L: Toggle lighting" << std::endl;
+    std::cout << "    ESC: Quit" << std::endl;
+    std::cout << "================================" << std::endl;
+
     while (!glfwWindowShouldClose(window))
     {
 
