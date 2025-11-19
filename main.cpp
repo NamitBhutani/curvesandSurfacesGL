@@ -270,7 +270,7 @@ int main()
         shader.setBool("lightingEnabled", lightingEnabled);
         shader.setFloat("ambientStrength", 0.3f);
         shader.setFloat("lightStrength", 0.8f);
-        shader.setFloat("shininess", 32.0f);
+        shader.setFloat("shininess", 25.0f);
         shader.setVec3("lightPos", glm::vec3(50.0f, 100.0f, 50.0f));
         shader.setVec3("viewPos", camera.position);
 
@@ -503,21 +503,91 @@ void createParkScene(std::vector<SceneObject> &objects)
     }
 
     // bench (static)
+    glm::vec3 benchPos1(-3.0f, 0.5f, 10.0f); // Left bench
+    glm::vec3 benchPos2(3.0f, 0.5f, 10.0f);  // Right bench
+
     {
-        glm::vec3 benchPos(0.0f, 0.5f, 10.0f);
-        glm::mat4 seatMat = glm::translate(glm::mat4(1.0f), benchPos);
+        // Seat
+        glm::mat4 seatMat = glm::translate(glm::mat4(1.0f), benchPos1);
         seatMat = glm::scale(seatMat, glm::vec3(4.0f, 0.2f, 1.2f));
         SceneObject seat{createCube(1.0f, COLOR_WOOD), seatMat};
         objects.push_back(seat);
 
+        // Legs
         for (int i = 0; i < 2; i++)
         {
             float x = (i == 0) ? -1.5f : 1.5f;
-            glm::mat4 legMat = glm::translate(glm::mat4(1.0f), benchPos + glm::vec3(x, -0.25f, 0.0f));
+            glm::mat4 legMat = glm::translate(glm::mat4(1.0f), benchPos1 + glm::vec3(x, -0.25f, 0.0f));
             legMat = glm::scale(legMat, glm::vec3(0.3f, 0.5f, 1.0f));
             SceneObject leg{createCube(1.0f, glm::vec3(0.2f)), legMat};
             objects.push_back(leg);
         }
+    }
+
+    {
+        // Seat
+        glm::mat4 seatMat = glm::translate(glm::mat4(1.0f), benchPos2);
+        seatMat = glm::scale(seatMat, glm::vec3(4.0f, 0.2f, 1.2f));
+        SceneObject seat{createCube(1.0f, COLOR_WOOD), seatMat};
+        objects.push_back(seat);
+
+        // Legs
+        for (int i = 0; i < 2; i++)
+        {
+            float x = (i == 0) ? -1.5f : 1.5f;
+            glm::mat4 legMat = glm::translate(glm::mat4(1.0f), benchPos2 + glm::vec3(x, -0.25f, 0.0f));
+            legMat = glm::scale(legMat, glm::vec3(0.3f, 0.5f, 1.0f));
+            SceneObject leg{createCube(1.0f, glm::vec3(0.2f)), legMat};
+            objects.push_back(leg);
+        }
+    }
+
+    // trees (static)
+    const int numTrees = 8;
+    glm::vec3 treePositions[] = {
+        glm::vec3(8.0f, 0.0f, 8.0f),
+        glm::vec3(-12.0f, 0.0f, 5.0f),
+        glm::vec3(15.0f, 0.0f, -6.0f),
+        glm::vec3(-15.0f, 0.0f, -10.0f),
+        glm::vec3(10.0f, 0.0f, -15.0f),
+        glm::vec3(-8.0f, 0.0f, 12.0f),
+        glm::vec3(18.0f, 0.0f, 3.0f),
+        glm::vec3(-5.0f, 0.0f, -15.0f)};
+
+    const glm::vec3 COLOR_TRUNK = glm::vec3(0.4f, 0.25f, 0.1f);
+    const glm::vec3 COLOR_FOLIAGE = glm::vec3(0.1f, 0.5f, 0.1f);
+
+    for (int i = 0; i < numTrees; i++)
+    {
+        glm::vec3 treePos = treePositions[i];
+
+        // Vary tree sizes slightly for natural look
+        float sizeVariation = 0.8f + (i % 3) * 0.2f;
+        float trunkHeight = 2.5f * sizeVariation;
+        float trunkRadius = 0.3f * sizeVariation;
+        float coneHeight = 3.0f * sizeVariation;
+        float coneRadius = 1.5f * sizeVariation;
+
+        // Tree trunk (cylinder)
+        glm::mat4 trunkMat = glm::translate(glm::mat4(1.0f), treePos + glm::vec3(0.0f, trunkHeight / 2.0f, 0.0f));
+        SceneObject trunk{createCylinder(trunkRadius, trunkHeight, 16, COLOR_TRUNK), trunkMat};
+        objects.push_back(trunk);
+
+        // Tree foliage - layered cones for fuller appearance
+        // Bottom cone layer
+        glm::mat4 coneMat1 = glm::translate(glm::mat4(1.0f), treePos + glm::vec3(0.0f, trunkHeight, 0.0f));
+        SceneObject cone1{createCone(coneRadius, coneHeight, 16, COLOR_FOLIAGE), coneMat1};
+        objects.push_back(cone1);
+
+        // Middle cone layer (slightly smaller and offset upward)
+        glm::mat4 coneMat2 = glm::translate(glm::mat4(1.0f), treePos + glm::vec3(0.0f, trunkHeight + coneHeight * 0.5f, 0.0f));
+        SceneObject cone2{createCone(coneRadius * 0.75f, coneHeight * 0.8f, 16, COLOR_FOLIAGE), coneMat2};
+        objects.push_back(cone2);
+
+        // Top cone layer (smallest)
+        glm::mat4 coneMat3 = glm::translate(glm::mat4(1.0f), treePos + glm::vec3(0.0f, trunkHeight + coneHeight * 0.9f, 0.0f));
+        SceneObject cone3{createCone(coneRadius * 0.5f, coneHeight * 0.6f, 16, COLOR_FOLIAGE), coneMat3};
+        objects.push_back(cone3);
     }
 }
 
