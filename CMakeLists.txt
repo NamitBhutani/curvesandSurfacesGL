@@ -27,7 +27,7 @@ add_executable(${PROJECT_NAME}
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    glad/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/glad/include
     ${GLFW_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIRS}
     $ENV{GLM_INCLUDE_DIR})

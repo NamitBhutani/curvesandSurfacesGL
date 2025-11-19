@@ -18,15 +18,15 @@ class Model
 public:
     std::vector<Mesh> meshes;
 
-    Model(const std::string &path)
+    Model(const std::string &path, glm::vec3 color = glm::vec3(1.0f))
     {
-        if (!loadOFF(path))
+        if (!loadOFF(path, color))
         {
             std::cerr << "[ERROR] (MODEL) Failed to load OFF: " << path << std::endl;
         }
     }
 
-    bool loadOFF(const std::string &path)
+    bool loadOFF(const std::string &path, glm::vec3 color)
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
@@ -104,8 +104,8 @@ public:
 
             Vertex v;
             // rotate model from Z-up to Y-up
-            v.position = glm::vec3(x, z, y);
-            v.color = glm::vec3(1.0f, 1.0f, 1.0f);
+            v.position = glm::vec3(x, y, z);
+            v.color = color;
 
             float r, g, b, a;
             if (ss >> r >> g >> b)
@@ -169,7 +169,7 @@ public:
 
             glm::vec3 normal = glm::normalize(glm::cross(vertices[faceIdx[2]].position - vertices[faceIdx[0]].position, vertices[faceIdx[1]].position - vertices[faceIdx[0]].position));
 
-            glm::vec3 faceColor(1.0f, 1.0f, 1.0f);
+            glm::vec3 faceColor = color;
             float r, g, b;
             if (ss >> r >> g >> b)
             {

@@ -1,6 +1,3 @@
-[submodule "bezier/glad"]
-	path = bezier/glad
-	url = https://github.com/NamitBhutani/glad
-[submodule "scene/glad"]
-	path = scene/glad
+[submodule "glad"]
+	path = glad
 	url = https://github.com/NamitBhutani/glad

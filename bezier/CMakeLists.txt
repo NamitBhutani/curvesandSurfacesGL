@@ -11,19 +11,18 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 
 add_library(glad STATIC
-    glad/glad.c)
+    ../glad/glad.c)
 target_include_directories(glad PRIVATE
-    glad/include)
+    ../glad/include)
 
 # Add your source files
 add_executable(${PROJECT_NAME}
-    main.cpp
-    bezier1.cpp)
+    main.cpp)
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    glad/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../glad/include
     ${GLFW_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIRS}
     $ENV{GLM_INCLUDE_DIR})
