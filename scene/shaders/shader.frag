@@ -8,6 +8,7 @@ in VS_OUT {
 
 out vec4 FragColor;
 
+uniform bool lightingEnabled;
 uniform float ambientStrength;
 uniform float lightStrength;
 uniform float shininess;
@@ -16,6 +17,11 @@ uniform vec3 viewPos;
 
 void main()
 {
+    if (!lightingEnabled) {
+        FragColor = vec4(fs_in.color, 1.0);
+        return;
+    }
+
     // ambient
     vec3 ambient = ambientStrength * fs_in.color;
 

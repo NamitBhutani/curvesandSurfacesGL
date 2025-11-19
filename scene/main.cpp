@@ -25,6 +25,7 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 bool drawEdges = false;
+bool lightingEnabled = true;
 
 // camera
 Camera camera(glm::vec3(0.0f, 10.0f, 30.0f));
@@ -95,6 +96,7 @@ int main()
         shader.setMat4("view", view);
         shader.setMat4("model", glm::mat4(1.0f));
 
+        shader.setBool("lightingEnabled", lightingEnabled);
         shader.setFloat("ambientStrength", 0.05f);
         shader.setFloat("lightStrength", 0.3f);
         shader.setFloat("shininess", 32.0f);
@@ -135,9 +137,13 @@ void processInput(GLFWwindow *window)
         camera.processRoll(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         camera.processRoll(-deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        camera.resetRoll();
 
     if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
         drawEdges = !drawEdges;
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        lightingEnabled = !lightingEnabled;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)

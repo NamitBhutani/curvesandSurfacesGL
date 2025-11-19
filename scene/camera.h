@@ -100,6 +100,12 @@ public:
         updateCameraVectors();
     }
 
+    void resetRoll()
+    {
+        roll = 0.0f;
+        updateCameraVectors();
+    }
+
 private:
     void updateCameraVectors()
     {
