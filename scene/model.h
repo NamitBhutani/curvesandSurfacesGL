@@ -103,7 +103,8 @@ public:
             }
 
             Vertex v;
-            v.position = glm::vec3(x, y, z);
+            // rotate model from Z-up to Y-up
+            v.position = glm::vec3(x, z, y);
             v.color = glm::vec3(1.0f, 1.0f, 1.0f);
 
             float r, g, b, a;
