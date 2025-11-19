@@ -167,6 +167,8 @@ public:
                 }
             }
 
+            glm::vec3 normal = glm::normalize(glm::cross(vertices[faceIdx[2]].position - vertices[faceIdx[0]].position, vertices[faceIdx[1]].position - vertices[faceIdx[0]].position));
+
             glm::vec3 faceColor(1.0f, 1.0f, 1.0f);
             float r, g, b;
             if (ss >> r >> g >> b)
@@ -186,6 +188,7 @@ public:
             {
                 Vertex v = vertices[faceIdx[k]];
                 v.color = faceColor;
+                v.normal = normal;
                 vertices.push_back(v);
             }
 

@@ -84,7 +84,7 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(0.53f, 0.80f, 0.91f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // use shader and set matrices
@@ -94,6 +94,13 @@ int main()
         shader.setMat4("projection", projection);
         shader.setMat4("view", view);
         shader.setMat4("model", glm::mat4(1.0f));
+
+        shader.setFloat("ambientStrength", 0.05f);
+        shader.setFloat("lightStrength", 0.3f);
+        shader.setFloat("shininess", 32.0f);
+
+        shader.setVec3("lightPos", glm::vec3(100.0f, 100.0f, 100.0f));
+        shader.setVec3("viewPos", camera.position);
 
         model.draw(shader, drawEdges);
 
