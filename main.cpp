@@ -233,7 +233,7 @@ int main()
     createParkScene(sceneObjects);
 
     std::cout << "Controls:" << std::endl;
-    std::cout << "  E - Toggle edit mode" << std::endl;
+    std::cout << "  TAB - Toggle edit mode" << std::endl;
     std::cout << "  P - Toggle animations" << std::endl;
     std::cout << "  L - Toggle lighting" << std::endl;
     std::cout << "  B - Toggle edges" << std::endl;
@@ -538,6 +538,12 @@ void processInput(GLFWwindow *window)
         camera.processKeyboard(UP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         camera.processKeyboard(DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        camera.processRoll(1.0f * deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        camera.processRoll(-1.0f * deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        camera.resetRoll();
 
     static bool bKeyPressed = false;
     if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS && !bKeyPressed)
@@ -606,12 +612,11 @@ void processInput(GLFWwindow *window)
     }
 
     // Edit mode toggle
-    static bool eKeyPressed = false;
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && !eKeyPressed)
+    static bool tabKeyPressed = false;
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS && !tabKeyPressed)
     {
         editMode = !editMode;
-        eKeyPressed = true;
-
+        tabKeyPressed = true;
         if (editMode)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -625,9 +630,9 @@ void processInput(GLFWwindow *window)
             std::cout << "Edit Mode: OFF" << std::endl;
         }
     }
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE)
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE)
     {
-        eKeyPressed = false;
+        tabKeyPressed = false;
     }
 }
 
